@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import TopNavbar from './components/TopNavbar';
 import FullSidebar from './components/FullSidebar';
+import IconRailSidebar from './components/IconRailSidebar';
 import StudySetExactView from './components/StudySetExactView';
 import LearnMode from './components/LearnMode';
 import PracticeTest from './components/PracticeTest';
@@ -15,6 +16,7 @@ import { srsProgressSets } from './data/mockData';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [createMenuOpen, setCreateMenuOpen] = useState(false);
   const [activeRoute, setActiveRoute] = useState('home');
   const [activeStudySet, setActiveStudySet] = useState(null);
@@ -171,7 +173,7 @@ export default function App() {
 
       {/* Top Navigation Bar */}
       <TopNavbar
-        onToggleSidebar={() => {}}
+        onToggleSidebar={() => setIsSidebarCollapsed(prev => !prev)}
         onOpenCreateMenu={() => setCreateMenuOpen(!createMenuOpen)}
         onOpenRecordLecture={() => setIsRecordLectureOpen(true)}
         searchQuery={searchQuery}
@@ -187,12 +189,19 @@ export default function App() {
       />
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Full text sidebar (always visible) */}
-        <FullSidebar
-          activeRoute={activeRoute}
-          onSelectRoute={handleSidebarRoute}
-          onOpenCreateFolder={() => showToast('Created new Folder')}
-        />
+        {/* Toggleable Sidebar: collapses to Icon-Rail like on Quizlet */}
+        {isSidebarCollapsed ? (
+          <IconRailSidebar
+            activeRoute={activeRoute}
+            onSelectRoute={handleSidebarRoute}
+          />
+        ) : (
+          <FullSidebar
+            activeRoute={activeRoute}
+            onSelectRoute={handleSidebarRoute}
+            onOpenCreateFolder={() => showToast('Created new Folder')}
+          />
+        )}
 
         {/* Main content */}
         <main className="flex-1 overflow-y-auto px-8 py-6 relative">
